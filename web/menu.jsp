@@ -53,7 +53,7 @@
     %>   
         <h1>Menu Teleoperadores:</h1> 
         <a href="ConversacionesListar">Ver conversaciones</a> <br/>
-        <a href="ConversacionesListar">Ver conversaciones</a> <br/>
+        <a href="Listar">Ver conversaciones</a> <br/>
     <%
                     break;
             default:  
