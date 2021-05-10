@@ -30,8 +30,7 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    
-    public Usuario findByEmail(String em) {
+     public Usuario findByEmail(String em) {
         Query q;
         Usuario usuario = null;
         List<Usuario> lista;

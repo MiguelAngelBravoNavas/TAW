@@ -5,11 +5,16 @@
  */
 package eventoswebapp.servlet;
 
-import eventoswebapp.dao.UsuarioFacade;
+import eventoswebapp.dao.ConversacionFacade;
+import eventoswebapp.entity.Conversacion;
 import eventoswebapp.entity.Usuario;
 import java.io.IOException;
-import java.io.PrintWriter;
+
+import java.util.List;
+
 import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,12 +27,14 @@ import javax.servlet.http.HttpSession;
  *
  * @author migue
  */
-@WebServlet(name = "Autenticar", urlPatterns = {"/Autenticar"})
-public class Autenticar extends HttpServlet {
-    
-    @EJB
-    private UsuarioFacade usuarioFacade;
+@WebServlet(name = "ServletListarCoversaciones", urlPatterns = {"/ServletListarCoversaciones"})
+public class ServletListarCoversaciones extends HttpServlet {
 
+    @EJB
+    private ConversacionFacade conversacionFacade;
+
+   
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,33 +46,35 @@ public class Autenticar extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String mail, pass, status = null, goTo="menu.jsp";
+        
+        HttpSession session = request.getSession();
         Usuario usuario;
-        RequestDispatcher rd;
+        String codigo, id, goTo;
+        Conversacion conver;
         
-        mail = request.getParameter("email");
-        pass = request.getParameter("password");
-        
-        // comprobamos si el usuario está en la BD
-        usuario = this.usuarioFacade.findByEmail(mail);
+        usuario = (Usuario)session.getAttribute("usuario");
         
         if (usuario == null) { 
-           status = "El usuario no se encuentra en la base de datos";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";
-        } else if (!pass.equals(usuario.getPassword())) { 
-           status = "La clave es incorrecta";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";                       
-        } else { // el usuario está y la clave es correcta
+            response.sendRedirect("login.jsp");
+        } else { 
+            codigo=request.getParameter("codigo");
+            if(codigo != null){                                         //listar losmensajes
+                id = request.getParameter("id");
+                conver =this.conversacionFacade.find(new Integer(id));
+                request.setAttribute("conver", conver);
+                goTo = "listadoMensajes.jsp";
+            }else{                                                      //listar conversaciones
+                List<Conversacion> listadoConversaciones;
+                listadoConversaciones = this.conversacionFacade.findAll();
+                request.setAttribute("listado", listadoConversaciones);
+                goTo = "listadoConversaciones.jsp";
             
-            request.getSession().setAttribute("usuario", usuario); // introducimos el usuario en la sesión para saber que está autenticado
+            }
+            RequestDispatcher rd = request.getRequestDispatcher(goTo);
+            rd.forward(request, response);
         }
         
-        rd = request.getRequestDispatcher(goTo);
-        rd.forward(request, response);        
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -105,5 +114,7 @@ public class Autenticar extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+   
 
 }

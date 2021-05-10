@@ -52,9 +52,9 @@ public class Mensaje implements Serializable {
     @Column(name = "ENVIADO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date enviado;
-    @JoinColumn(name = "CONVERSACION_ID", referencedColumnName = "USUARIO_ID")
+    @JoinColumn(name = "CONVERSACION_ID", referencedColumnName = "CONVERSACION_ID")
     @ManyToOne(optional = false)
-    private Usuario conversacionId;
+    private Conversacion conversacionId;
     @JoinColumn(name = "REMITENTE_ID", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario remitenteId;
@@ -95,11 +95,11 @@ public class Mensaje implements Serializable {
         this.enviado = enviado;
     }
 
-    public Usuario getConversacionId() {
+    public Conversacion getConversacionId() {
         return conversacionId;
     }
 
-    public void setConversacionId(Usuario conversacionId) {
+    public void setConversacionId(Conversacion conversacionId) {
         this.conversacionId = conversacionId;
     }
 

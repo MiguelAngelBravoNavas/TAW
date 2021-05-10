@@ -44,28 +44,28 @@ public class UsuarioEventos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    
-    @Column(name = "USUARIO_ID", nullable = false)
+    @NotNull
+    @Column(name = "USUARIO_ID")
     private Integer usuarioId;
     @Basic(optional = false)
-    
-   
-    @Column(name = "NOMBRE", nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "NOMBRE")
     private String nombre;
     @Basic(optional = false)
-    
-    
-    @Column(name = "APELLIDOS", nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "APELLIDOS")
     private String apellidos;
     @Basic(optional = false)
-    
-    
-    @Column(name = "DOMICILIO", nullable = false, length = 70)
+    @NotNull
+    @Size(min = 1, max = 70)
+    @Column(name = "DOMICILIO")
     private String domicilio;
     @Basic(optional = false)
-    
-    
-    @Column(name = "CIUDAD", nullable = false, length = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "CIUDAD")
     private String ciudad;
     @Column(name = "EDAD")
     private Integer edad;

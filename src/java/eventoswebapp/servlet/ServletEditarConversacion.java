@@ -5,28 +5,20 @@
  */
 package eventoswebapp.servlet;
 
-import eventoswebapp.dao.UsuarioFacade;
-import eventoswebapp.entity.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.ejb.EJB;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author migue
  */
-@WebServlet(name = "Autenticar", urlPatterns = {"/Autenticar"})
-public class Autenticar extends HttpServlet {
-    
-    @EJB
-    private UsuarioFacade usuarioFacade;
+@WebServlet(name = "ServletEditarMensaje", urlPatterns = {"/ServletEditarMensaje"})
+public class ServletEditarConversacion extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,33 +31,20 @@ public class Autenticar extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String mail, pass, status = null, goTo="menu.jsp";
-        Usuario usuario;
-        RequestDispatcher rd;
-        
-        mail = request.getParameter("email");
-        pass = request.getParameter("password");
-        
-        // comprobamos si el usuario está en la BD
-        usuario = this.usuarioFacade.findByEmail(mail);
-        
-        if (usuario == null) { 
-           status = "El usuario no se encuentra en la base de datos";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";
-        } else if (!pass.equals(usuario.getPassword())) { 
-           status = "La clave es incorrecta";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";                       
-        } else { // el usuario está y la clave es correcta
-            
-            request.getSession().setAttribute("usuario", usuario); // introducimos el usuario en la sesión para saber que está autenticado
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ServletEditarMensaje</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ServletEditarMensaje at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        
-        rd = request.getRequestDispatcher(goTo);
-        rd.forward(request, response);        
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

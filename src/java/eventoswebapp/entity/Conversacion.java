@@ -6,7 +6,9 @@
 package eventoswebapp.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,8 +18,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +47,8 @@ public class Conversacion implements Serializable {
     @JoinColumn(name = "TELEOPERADOR_ID", referencedColumnName = "USUARIO_ID")
     @ManyToOne(optional = false)
     private Usuario teleoperadorId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conversacionId")
+    private List<Mensaje> mensajeList;
 
     public Conversacion() {
     }
@@ -73,6 +79,15 @@ public class Conversacion implements Serializable {
 
     public void setTeleoperadorId(Usuario teleoperadorId) {
         this.teleoperadorId = teleoperadorId;
+    }
+
+    @XmlTransient
+    public List<Mensaje> getMensajeList() {
+        return mensajeList;
+    }
+
+    public void setMensajeList(List<Mensaje> mensajeList) {
+        this.mensajeList = mensajeList;
     }
 
     @Override

@@ -15,16 +15,16 @@
         <title>Menu</title>
     </head>
     <body>
-    <%
+    <%  
         Usuario usuario = (Usuario)session.getAttribute("usuario");
-        
+       
         if (usuario == null) {
             response.sendRedirect("login.jsp");  
             return;
         }
     %> 
        
-       <h1>Bienvenido, <%= usuario.getUsuarioEventos().getNombre() %>, al sistema</h1> 
+       <h1>Bienvenido, <%= usuario.getEmail() %>, al sistema</h1> 
        
     <%
         switch (usuario.getRol()) 
@@ -52,8 +52,8 @@
             case 5://Teleoperadores  
     %>   
         <h1>Menu Teleoperadores:</h1> 
-        <a href="ConversacionesListar">Ver conversaciones</a> <br/>
-        <a href="Listar">Ver conversaciones</a> <br/>
+        <a href="ServletListarCoversaciones">Ver conversaciones</a> <br/>
+        
     <%
                     break;
             default:  

@@ -5,12 +5,14 @@
  */
 package eventoswebapp.servlet;
 
-import eventoswebapp.dao.UsuarioFacade;
+import eventoswebapp.dao.ConversacionFacade;
+import eventoswebapp.dao.MensajeFacade;
+import eventoswebapp.entity.Conversacion;
+import eventoswebapp.entity.Mensaje;
 import eventoswebapp.entity.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +24,16 @@ import javax.servlet.http.HttpSession;
  *
  * @author migue
  */
-@WebServlet(name = "Autenticar", urlPatterns = {"/Autenticar"})
-public class Autenticar extends HttpServlet {
-    
+@WebServlet(name = "ServletBorrarConversacion", urlPatterns = {"/ServletBorrarConversacion"})
+public class ServletBorrarConversacion extends HttpServlet {
+
     @EJB
-    private UsuarioFacade usuarioFacade;
+    private MensajeFacade mensajeFacade;
+
+    @EJB
+    private ConversacionFacade conversacionFacade;
+    
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,33 +46,34 @@ public class Autenticar extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String mail, pass, status = null, goTo="menu.jsp";
+         
+        String str;
+        Conversacion c;
+        
+        HttpSession session = request.getSession();
         Usuario usuario;
-        RequestDispatcher rd;
-        
-        mail = request.getParameter("email");
-        pass = request.getParameter("password");
-        
-        // comprobamos si el usuario está en la BD
-        usuario = this.usuarioFacade.findByEmail(mail);
+        usuario = (Usuario)session.getAttribute("usuario");
         
         if (usuario == null) { 
-           status = "El usuario no se encuentra en la base de datos";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";
-        } else if (!pass.equals(usuario.getPassword())) { 
-           status = "La clave es incorrecta";
-           request.setAttribute("status", status);
-           goTo = "login.jsp";                       
-        } else { // el usuario está y la clave es correcta
-            
-            request.getSession().setAttribute("usuario", usuario); // introducimos el usuario en la sesión para saber que está autenticado
+            response.sendRedirect("login.jsp");           
+        } else {        
+            str = request.getParameter("id");
+            if (str == null) {
+                response.sendRedirect("menu.jsp");            
+            } else {      
+                c= this.conversacionFacade.find(new Integer(str));               
+                if (c == null) { 
+                    response.sendRedirect("menu.jsp");       
+                } else {
+                    for(Mensaje m : c.getMensajeList()){
+                        this.mensajeFacade.remove(m);
+                    }
+                    this.conversacionFacade.remove(c);
+                    response.sendRedirect("ServletListarCoversaciones");   
+                }       
+            }
         }
-        
-        rd = request.getRequestDispatcher(goTo);
-        rd.forward(request, response);        
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

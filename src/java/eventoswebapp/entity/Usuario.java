@@ -68,10 +68,8 @@ public class Usuario implements Serializable {
     private List<Estudio> estudioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creadorId")
     private List<Evento> eventoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conversacionId")
-    private List<Mensaje> mensajeList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "remitenteId")
-    private List<Mensaje> mensajeList1;
+    private List<Mensaje> mensajeList;
 
     public Usuario() {
     }
@@ -169,15 +167,6 @@ public class Usuario implements Serializable {
 
     public void setMensajeList(List<Mensaje> mensajeList) {
         this.mensajeList = mensajeList;
-    }
-
-    @XmlTransient
-    public List<Mensaje> getMensajeList1() {
-        return mensajeList1;
-    }
-
-    public void setMensajeList1(List<Mensaje> mensajeList1) {
-        this.mensajeList1 = mensajeList1;
     }
 
     @Override
