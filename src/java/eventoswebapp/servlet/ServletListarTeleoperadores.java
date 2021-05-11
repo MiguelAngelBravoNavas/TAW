@@ -5,20 +5,30 @@
  */
 package eventoswebapp.servlet;
 
+import eventoswebapp.dao.UsuarioFacade;
+import eventoswebapp.entity.Conversacion;
+import eventoswebapp.entity.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author migue
  */
-@WebServlet(name = "ServletEditarMensaje", urlPatterns = {"/ServletEditarMensaje"})
-public class ServletEditarConversacion extends HttpServlet {
+@WebServlet(name = "ServletListarTeleoperadores", urlPatterns = {"/ServletListarTeleoperadores"})
+public class ServletListarTeleoperadores extends HttpServlet {
+
+    @EJB
+    private UsuarioFacade usuarioFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,18 +41,21 @@ public class ServletEditarConversacion extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletEditarMensaje</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletEditarMensaje at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        HttpSession session = request.getSession();
+        Usuario usuario;
+        
+        
+        usuario = (Usuario)session.getAttribute("usuario");
+        
+        if (usuario == null) { 
+            response.sendRedirect("login.jsp");
+        } else { 
+            
+            List<Usuario> teleop = this.usuarioFacade.findByRol(5);
+            request.setAttribute("teleop", teleop);
+           
+            RequestDispatcher rd = request.getRequestDispatcher("menuUser.jsp");
+            rd.forward(request, response);
         }
     }
 

@@ -46,7 +46,10 @@
                     break;
             case 4://Usuario de eventos  
     %>
-    
+            
+            <a href="ServletListarTeleoperadores">Chatear con teleoperador</a> <br/>
+           
+            
     <%
                     break;
             case 5://Teleoperadores  

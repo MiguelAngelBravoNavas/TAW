@@ -45,5 +45,16 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         }
         return usuario;
     }
+     
+      public List <Usuario> findByRol(int rol) {
+        Query q;   
+        List<Usuario> lista = null;
+        
+        q = this.getEntityManager().createNamedQuery("Usuario.findByRol");
+        q.setParameter("rol", rol); 
+
+        lista = q.getResultList(); 
+        return lista;
+    }
     
 }

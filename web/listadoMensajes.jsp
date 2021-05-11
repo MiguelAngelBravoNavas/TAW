@@ -33,20 +33,18 @@
             <th>MENSAJE</th>
             <th>HORA</th>
             <th>FECHA</th>
-            <th>EDITAR</th>
             <th>BORRAR</th>         
         </tr>
     <%      SimpleDateFormat ff = new SimpleDateFormat("dd-MM-yyyy");
             SimpleDateFormat fh = new SimpleDateFormat("HH:mm");
-            for (Mensaje m :con.getMensajeList()) {
+            for (Mensaje m :con.getMensajeList()) { 
     %>
         <tr>
             <td><%=m.getRemitenteId().getEmail() %></td>
             <td><%=m.getTexto()%></td>
             <td><%=fh.format(m.getEnviado()) %></td>
             <td><%=ff.format(m.getEnviado()) %></td>
-            <td><a href="ServletBorrarConversacion?id=<%=m.getMensajeId()  %>">Editar</a> </td>
-            <td><a href="ServletListarCoversaciones?id=<%= m.getMensajeId() %>&codigo=mensajes">Borrar</a> </td>
+            <td><a href="ServletBorrarConversacion?id=<%= m.getMensajeId() %>&codigo=borrarmensaje">Borrar</a> </td>
         </tr>    
             
     <%

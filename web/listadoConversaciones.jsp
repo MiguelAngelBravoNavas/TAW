@@ -45,7 +45,7 @@
             <td><%=c.getConversacionId() %></td>
             <td><%=c.getUsuarioId().getEmail()  %></td>
             <td><%=c.getTeleoperadorId().getEmail() %></td>
-            <td><a href="werwe">Chatear</a> </td>
+            <td><a href="chat.jsp?id=<%= c.getConversacionId() %>">Chatear</a> </td>
             <td><a href="ServletBorrarConversacion?id=<%= c.getConversacionId() %>">Borrar</a> </td>
             <td><a href="ServletListarCoversaciones?id=<%=c.getConversacionId()%>&codigo=listarmensajes">Ver Mensajes</a> </td>
         </tr>    

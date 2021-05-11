@@ -45,9 +45,8 @@ public class Mensaje implements Serializable {
     @Column(name = "MENSAJE_ID")
     private Integer mensajeId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 280)
-    @Column(name = "TEXTO")
+    
+    @Column(name = "TEXTO", length = 280, nullable = false)
     private String texto;
     @Column(name = "ENVIADO")
     @Temporal(TemporalType.TIMESTAMP)

@@ -6,13 +6,14 @@
 package eventoswebapp.servlet;
 
 import eventoswebapp.dao.ConversacionFacade;
-import eventoswebapp.dao.MensajeFacade;
+import eventoswebapp.dao.UsuarioFacade;
 import eventoswebapp.entity.Conversacion;
-import eventoswebapp.entity.Mensaje;
 import eventoswebapp.entity.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,15 +25,14 @@ import javax.servlet.http.HttpSession;
  *
  * @author migue
  */
-@WebServlet(name = "ServletBorrarConversacion", urlPatterns = {"/ServletBorrarConversacion"})
-public class ServletBorrarConversacion extends HttpServlet {
-
-    @EJB
-    private MensajeFacade mensajeFacade;
+@WebServlet(name = "ServletCrearConversacion", urlPatterns = {"/ServletCrearConversacion"})
+public class ServletCrearConversacion extends HttpServlet {
 
     @EJB
     private ConversacionFacade conversacionFacade;
-    
+
+    @EJB
+    private UsuarioFacade usuarioFacade;
     
 
     /**
@@ -46,42 +46,28 @@ public class ServletBorrarConversacion extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         
-        String id, codigo, goTo="menu.jsp";
-        Conversacion c;
-        Mensaje me;
-        
         HttpSession session = request.getSession();
         Usuario usuario;
+        Conversacion c, cNueva = new Conversacion();
+    
         usuario = (Usuario)session.getAttribute("usuario");
         
         if (usuario == null) { 
-            response.sendRedirect("login.jsp");           
-        } else {        
-            id = request.getParameter("id");
-            if (id == null) {
-                response.sendRedirect("menu.jsp");            
-            } else {
-                codigo=request.getParameter("codigo");
-                if(codigo != null){ //mensajes
-                 me= this.mensajeFacade.find(new Integer(id));
-                 me.setTexto("--Mensaje--eliminado--");
-                 this.mensajeFacade.edit(me);
-                 response.sendRedirect("ServletListarCoversaciones?id="+me.getConversacionId().getConversacionId() +"&codigo=listarmensajes");
-                }else{ //conversaciones
-                
-                c= this.conversacionFacade.find(new Integer(id));               
-                if (c == null) { 
-                    response.sendRedirect("menu.jsp");       
-                } else {          
-                    for(Mensaje m : c.getMensajeList()){
-                        this.mensajeFacade.remove(m);
-                    }
-                    this.conversacionFacade.remove(c);
-                    response.sendRedirect("ServletListarCoversaciones");   
-                }
-              }
-            }
+            response.sendRedirect("login.jsp");
+        } else {
+            String idTele = request.getParameter("teleop");
+            Usuario teleoperador = this.usuarioFacade.find(new Integer(idTele));
+            c = this.conversacionFacade.findByUserAndTele(usuario.getUsuarioId(), teleoperador.getUsuarioId());
+            if(c==null){
+            cNueva.setConversacionId(0);
+            cNueva.setUsuarioId(usuario);
+            cNueva.setTeleoperadorId(teleoperador);
+            this.conversacionFacade.create(cNueva); 
+            c = this.conversacionFacade.findByUserAndTele(usuario.getUsuarioId(), teleoperador.getUsuarioId());
+            }      
+            request.setAttribute("conversacion", c);
+            RequestDispatcher rd = request.getRequestDispatcher("chat.jsp");
+            rd.forward(request, response);
         }
     }
 
