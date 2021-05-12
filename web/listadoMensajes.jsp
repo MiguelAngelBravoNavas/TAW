@@ -23,10 +23,12 @@
     %>          
             
             <h2>No hay mensajes</h2>
-    
+    </br><a href="ServletListarCoversaciones?id=<%=con.getConversacionId()%>">Atras</a>
     <%
         } else {
     %>
+    </br><a href="ServletListarCoversaciones?id=<%=con.getConversacionId()%>">Atras</a>
+   
     <table border="1">
         <tr>
             <th>USUARIO</th>
@@ -55,6 +57,6 @@
             } // else
      %>
     
-    </br><a href="menu.jsp">Volver al menu</a>
+    
    </body>
 </html>

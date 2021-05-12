@@ -21,7 +21,7 @@
             response.sendRedirect("login.jsp");  
             return;
         }
-        if (usuario.getRol()==5){
+        if (usuario.getRol()==5){ // es teleoperador
             String idConversacion = request.getParameter("id");
             idc = Integer.parseInt(idConversacion);
         }else{
@@ -35,6 +35,9 @@
         <form>
             <table>
                 <tr>
+                    <td><input type="hidden" id="idc"  value="<%= Integer.toString(idc) %>"  name="idc"/></td>
+                </tr>
+                <tr>
                     <td>Usuario:<%=usuario.getEmail()%></td>
                     <td><input type="hidden" id="name"  value="<%=usuario.getEmail()%>"  name="name"/></td>
                 </tr>
@@ -43,10 +46,21 @@
                     <td><input type="text" id="message" name="message" /></td>
                 </tr>
                 <tr>
-                    <td><input type="button" onclick="postMessage();" value="SHOUT" /></td>
+                    <td><input type="button" onclick="postMessage();" value="ENVIAR" /></td>
                 </tr>
             </table>
         </form>
+        <%  
+        if (usuario.getRol()==5){ // es teleoperador
+        %>
+           <a href="ServletListarCoversaciones?id=<%=Integer.toString(idc)%>">Abandonar el chat</a> 
+        <%
+        }else{
+        %>
+            <a href="menu.jsp">Abandonar el chat</a>
+        <%
+        }  
+        %>  
         <h2> Conversacion </h2>
         <div id="content">
             <% if (application.getAttribute("messages") != null) {%>
@@ -59,10 +73,11 @@
                 //xmlhttp.open("POST", "shoutServlet?t="+new Date(), false);
                 xmlhttp.open("POST", "shoutServlet", false);
                 xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                var idCon = escape(document.getElementById("idc").value);
                 var nameText = escape(document.getElementById("name").value);
                 var messageText = escape(document.getElementById("message").value);
                 document.getElementById("message").value = "";
-                xmlhttp.send("name="+nameText+"&message="+messageText);
+                xmlhttp.send("name="+nameText+"&message="+messageText+"&idc="+idCon);
             }
             var messagesWaiting = false;
             function getMessages(){
