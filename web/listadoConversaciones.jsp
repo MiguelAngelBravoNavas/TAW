@@ -24,10 +24,26 @@
         
         
         List<Conversacion> listado = (List)request.getAttribute("listado");
+        List<Usuario> teleop =(List)request.getAttribute("teleop");
        
     %>    
     <body>
-        <h1>Listado de Conversacioness</h1>
+        <h1>Conversaciones</h1>
+            
+            <form action="ServletListarCoversaciones" method="POST">
+                BUSCAR POR TELEOPERADOR: 
+                <select  name="teleop">
+                    <option selected="selected" value="todos">todos</option>
+                    <%
+                        for(Usuario t : teleop){
+            %>
+                    <option value="<%=t.getUsuarioId() %>"><%=t.getEmail() %></option>
+                    <%
+                        }
+            %>
+                </select>
+               <input type="submit" value="BUSCAR" name="BUSCAR" />
+            </form>
            
     <%
         if (listado == null || listado.isEmpty()) {
@@ -41,9 +57,9 @@
      <a href="Salir">Salir del sistema</a> <br/> 
     <table border="1">
         <tr>
-            <th>CONVERSACIONID</th>
-            <th>USUARIOEMAIL</th>
-            <th>TELEOPERADOREMAIL</th>
+            
+            <th>USUARIO</th>
+            <th>TELEOPERADOR</th>
             <th>CHATEAR</th>
             <th>BORRAR</th>
             <th>VERMENSAJES</th>         
@@ -52,7 +68,7 @@
             for (Conversacion c:listado) {
     %>
         <tr>
-            <td><%=c.getConversacionId() %></td>
+           
             <td><%=c.getUsuarioId().getEmail()  %></td>
             <td><%=c.getTeleoperadorId().getEmail() %></td>
             <%

@@ -46,5 +46,17 @@ public class ConversacionFacade extends AbstractFacade<Conversacion> {
         }
         return c;
     }
+    public List<Conversacion> findByTele(int t) {
+        Query q;
+        List<Conversacion> lista;
+        Conversacion c = null;
+
+        q=this.em.createQuery("SELECT c FROM Conversacion c WHERE c.teleoperadorId.usuarioId = :t");
+        q.setParameter("t", t);
+
+        lista = q.getResultList(); 
+        
+        return lista;
+    }
     
 }

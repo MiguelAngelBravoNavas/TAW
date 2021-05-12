@@ -60,11 +60,11 @@ public class ServletChatear extends HttpServlet {
         Mensaje m = new Mensaje();
         Conversacion c;
         usuario = (Usuario)session.getAttribute("usuario");
+       
         
         if (usuario == null) { 
             response.sendRedirect("login.jsp");
         } 
-        
         
         List<AsyncContext> asyncContexts = new ArrayList<>(this.contexts);
         this.contexts.clear();
@@ -73,24 +73,21 @@ public class ServletChatear extends HttpServlet {
         String name = request.getParameter("name");
         String message = request.getParameter("message");
         c = this.conversacionFacade.find(new Integer(idc));
-        if(c!=null){
+       
         m.setConversacionId(c);
         m.setMensajeId(0);
         m.setRemitenteId(usuario);
         m.setTexto(message);
         m.setEnviado(new Date());
-        }
-        if (m!= null){
-            
+        this.mensajeFacade.create(m);
+        c.getMensajeList().add(m);
+        this.conversacionFacade.edit(c);
            
-           this.mensajeFacade.create(m);
-           c.getMensajeList().add(m);
-           this.conversacionFacade.edit(c);
-           
-        }
+       
         String htmlMessage = "<p><b>" + name + "</b><br/>" + message + "</p>";
         
         ServletContext application = request.getServletContext();
+        
         
         if (application.getAttribute("messages") == null) {
             application.setAttribute("messages", htmlMessage);

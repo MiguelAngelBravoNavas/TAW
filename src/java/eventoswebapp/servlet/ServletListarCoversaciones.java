@@ -6,11 +6,17 @@
 package eventoswebapp.servlet;
 
 import eventoswebapp.dao.ConversacionFacade;
+import eventoswebapp.dao.MensajeFacade;
+import eventoswebapp.dao.UsuarioFacade;
 import eventoswebapp.entity.Conversacion;
+import eventoswebapp.entity.Mensaje;
 import eventoswebapp.entity.Usuario;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
@@ -31,6 +37,12 @@ import javax.servlet.http.HttpSession;
 public class ServletListarCoversaciones extends HttpServlet {
 
     @EJB
+    private MensajeFacade mensajeFacade;
+
+    @EJB
+    private UsuarioFacade usuarioFacade;
+    
+    @EJB
     private ConversacionFacade conversacionFacade;
 
    
@@ -49,8 +61,9 @@ public class ServletListarCoversaciones extends HttpServlet {
         
         HttpSession session = request.getSession();
         Usuario usuario;
-        String codigo, id, goTo;
+        String codigo, id, goTo,idteleop,filtro;
         Conversacion conver;
+        List<Mensaje> lista;
         
         usuario = (Usuario)session.getAttribute("usuario");
         
@@ -60,13 +73,26 @@ public class ServletListarCoversaciones extends HttpServlet {
             codigo=request.getParameter("codigo");
             if(codigo != null){                                         //listar losmensajes
                 id = request.getParameter("id");
+                filtro= request.getParameter("filtro");
                 conver =this.conversacionFacade.find(new Integer(id));
+                if (filtro !=null){
+                 lista = this.mensajeFacade.findOrdenInverso(Integer.parseInt(id));
+                 conver.setMensajeList(lista);
+                }
+                
                 request.setAttribute("conver", conver);
                 goTo = "listadoMensajes.jsp";
             }else{                                                      //listar conversaciones
+                idteleop =request.getParameter("teleop");
                 List<Conversacion> listadoConversaciones;
+                if(idteleop == null || idteleop.equals("todos")){
                 listadoConversaciones = this.conversacionFacade.findAll();
+                }else{
+                listadoConversaciones = this.conversacionFacade.findByTele(Integer.parseInt(idteleop));
+                }
                 request.setAttribute("listado", listadoConversaciones);
+                List<Usuario> teleop = this.usuarioFacade.findByRol(5);
+                request.setAttribute("teleop", teleop);
                 goTo = "listadoConversaciones.jsp";
             
             }
@@ -114,6 +140,8 @@ public class ServletListarCoversaciones extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    
 
    
 

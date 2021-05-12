@@ -16,7 +16,7 @@
         
     %>    
     <body>
-        <h1>Listado de Mensajess</h1>
+        <h1>Mensajes</h1>
            
     <%
         if (con == null || con.getMensajeList().isEmpty()) {
@@ -27,8 +27,11 @@
     <%
         } else {
     %>
+    
     </br><a href="ServletListarCoversaciones?id=<%=con.getConversacionId()%>">Atras</a>
-   
+    <form action="ServletListarCoversaciones?id=<%=con.getConversacionId()%>&codigo=listarmensajes&filtro=porfecha" name="reciente" method="POST">
+        <input type="submit" value="Recientes" name="Recientes" />
+    </form>
     <table border="1">
         <tr>
             <th>USUARIO</th>
@@ -39,7 +42,7 @@
         </tr>
     <%      SimpleDateFormat ff = new SimpleDateFormat("dd-MM-yyyy");
             SimpleDateFormat fh = new SimpleDateFormat("HH:mm");
-            for (Mensaje m :con.getMensajeList()) { 
+            for (Mensaje m :con.getMensajeList()) {
     %>
         <tr>
             <td><%=m.getRemitenteId().getEmail() %></td>

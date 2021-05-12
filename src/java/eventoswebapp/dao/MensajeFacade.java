@@ -6,9 +6,11 @@
 package eventoswebapp.dao;
 
 import eventoswebapp.entity.Mensaje;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,5 +30,9 @@ public class MensajeFacade extends AbstractFacade<Mensaje> {
     public MensajeFacade() {
         super(Mensaje.class);
     }
-    
+    public List<Mensaje> findOrdenInverso(int idc){
+        Query q=this.em.createQuery("select m from Mensaje m where m.conversacionId.conversacionId = :id order by m.enviado desc");
+        q.setParameter("id", idc);
+        return q.getResultList();
+    }
 }

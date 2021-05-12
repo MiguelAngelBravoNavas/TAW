@@ -14,8 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%
-            %>
+  
         
         <%
               List<Usuario> teleop =(List)request.getAttribute("teleop");
